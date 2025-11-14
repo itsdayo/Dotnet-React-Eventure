@@ -1,6 +1,6 @@
-# Reactivities Planner
+#  Eventure Planner
 
-This guide walks you through setting up and running the Reactivities Planner application, both locally and with Docker.
+This guide walks you through setting up and running the  Eventure Planner application, both locally and with Docker.
 
 ## Getting Started
 
@@ -24,5 +24,5 @@ dotnet run
 ```bash
 docker build -t dayosql/reactivities .
 
-docker run --rm -it -p 8080:80 dayosql/reactivities
+docker run --rm -it -p 8080:8080 dayosql/reactivities
 ```
