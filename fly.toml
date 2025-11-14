@@ -11,10 +11,7 @@ primary_region = "lax"
   Cloudinary__CloudName="doeosqsqu"
   Cloudinary__ApiKey="829112739361451"
   TokenKey="super secret key that is at least 64 characters long for hmac sha512 algorithm to work properly"
-  DATABASE_URL="postgresql://reactivities-planner-db.flycast"
-
-[build]
-  image = "dayosql/reactivities:latest"
+  DATABASE_URL="postgres://reactivities_planner:MAmH8xWlllvA8kk@reactivities-planner-db.flycast:5432/reactivities_planner?sslmode=disable"
 
 [http_service]
   internal_port = 8080

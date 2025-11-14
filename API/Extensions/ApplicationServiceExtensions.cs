@@ -38,26 +38,59 @@ namespace API.Extensions
         var connUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
 
         // Parse connection URL to connection string for Npgsql
-        if (!string.IsNullOrEmpty(connUrl))
+        if (string.IsNullOrEmpty(connUrl))
+        {
+            throw new ArgumentNullException("DATABASE_URL", "DATABASE_URL environment variable cannot be null or empty.");
+        }
+
+        try
         {
             connUrl = connUrl.Replace("postgres://", string.Empty);
-        }
-        else
-        {
-            // Handle the null or empty case appropriately here
-            throw new ArgumentNullException(nameof(connUrl), "Connection URL cannot be null or empty.");
-        }
-        var pgUserPass = connUrl.Split("@")[0];
-        var pgHostPortDb = connUrl.Split("@")[1];
-        var pgHostPort = pgHostPortDb.Split("/")[0];
-        var pgDb = pgHostPortDb.Split("/")[1];
-        var pgUser = pgUserPass.Split(":")[0];
-        var pgPass = pgUserPass.Split(":")[1];
-        var pgHost = pgHostPort.Split(":")[0];
-        var pgPort = pgHostPort.Split(":")[1];
-	var updatedHost = pgHost.Replace("flycast", "internal");
+            
+            var parts = connUrl.Split("@");
+            if (parts.Length != 2)
+            {
+                throw new FormatException("Invalid DATABASE_URL format. Expected format: postgres://user:password@host:port/database");
+            }
+            
+            var pgUserPass = parts[0];
+            var pgHostPortDb = parts[1];
+            
+            var userPassParts = pgUserPass.Split(":");
+            if (userPassParts.Length != 2)
+            {
+                throw new FormatException("Invalid user:password format in DATABASE_URL");
+            }
+            
+            var hostPortDbParts = pgHostPortDb.Split("/");
+            if (hostPortDbParts.Length != 2)
+            {
+                throw new FormatException("Invalid host:port/database format in DATABASE_URL");
+            }
+            
+            var pgUser = userPassParts[0];
+            var pgPass = userPassParts[1];
+            
+            var pgHostPort = hostPortDbParts[0];
+            var pgDb = hostPortDbParts[1];
+            
+            var hostPortParts = pgHostPort.Split(":");
+            if (hostPortParts.Length != 2)
+            {
+                throw new FormatException("Invalid host:port format in DATABASE_URL");
+            }
+            
+            var pgHost = hostPortParts[0];
+            var pgPort = hostPortParts[1];
+            
+            var updatedHost = pgHost.Replace("flycast", "internal");
 
-        connStr = $"Server={updatedHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb};";
+            connStr = $"Server={updatedHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb};";
+        }
+        catch (Exception ex)
+        {
+            throw new InvalidOperationException($"Failed to parse DATABASE_URL: {ex.Message}", ex);
+        }
     }
 
     // Whether the connection string came from the local development configuration file

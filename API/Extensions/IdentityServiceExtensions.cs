@@ -19,7 +19,14 @@ services.AddIdentityCore<AppUser>(opt=>{
     
     })
      .AddEntityFrameworkStores<DataContext>();
- var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TokenKey"]));
+     
+ var tokenKey = config["TokenKey"];
+ if (string.IsNullOrEmpty(tokenKey))
+ {
+     throw new InvalidOperationException("TokenKey is not configured in application settings. Please set it in appsettings.json or as an environment variable.");
+ }
+ 
+ var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenKey));
 
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(opt=>
         { 

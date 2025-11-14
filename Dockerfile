@@ -26,7 +26,7 @@ RUN dotnet restore Infrastructure/Infrastructure.csproj
 COPY . .
 
 # Build and publish
-RUN dotnet publish -c Release -o out --no-restore
+RUN dotnet publish API/API.csproj -c Release -o out --no-restore
 
 # Stage 2: Runtime
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime

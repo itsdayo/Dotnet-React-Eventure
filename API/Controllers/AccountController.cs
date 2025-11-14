@@ -8,37 +8,60 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace API.Controllers
 {
     
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/account")]
     public class AccountController:ControllerBase
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly TokenService _tokenSerivce;
-        public AccountController(UserManager<AppUser> userManager, TokenService tokenSerivce)
+        private readonly ILogger<AccountController> _logger;
+        
+        public AccountController(UserManager<AppUser> userManager, TokenService tokenSerivce, ILogger<AccountController> logger)
         {
             _tokenSerivce = tokenSerivce;
             _userManager = userManager;
-
+            _logger = logger;
         } 
         [AllowAnonymous]
         [HttpPost("login")]
-        public async Task<ActionResult<UserDto>>Login(LoginDto loginDto)
+        public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
         {
-            var user = await _userManager.Users.Include(p=>p.Photos)
-            .FirstOrDefaultAsync(x=>x.Email==loginDto.Email);
-            if(user == null) return Unauthorized();
-
-            var result = await _userManager.CheckPasswordAsync(user, loginDto.Password);
-            if(result)
+            try
             {
-               return CreateUserObject(user);
+                _logger.LogInformation("Login attempt for email: {Email}", loginDto.Email);
+                
+                var user = await _userManager.Users.Include(p=>p.Photos)
+                .FirstOrDefaultAsync(x=>x.Email==loginDto.Email);
+                
+                if(user == null) 
+                {
+                    _logger.LogWarning("Login failed: User not found for email: {Email}", loginDto.Email);
+                    return Unauthorized();
+                }
 
+                var result = await _userManager.CheckPasswordAsync(user, loginDto.Password);
+                
+                if(result)
+                {
+                    _logger.LogInformation("Login successful for user: {UserId}", user.Id);
+                    return CreateUserObject(user);
+                }
+                else
+                {
+                    _logger.LogWarning("Login failed: Invalid password for email: {Email}", loginDto.Email);
+                    return Unauthorized();
+                }
             }
-            return Unauthorized();
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred during login for email: {Email}", loginDto.Email);
+                return StatusCode(500, "An error occurred during login");
+            }
         }
         [AllowAnonymous]
         [HttpPost("register")]
@@ -71,6 +94,31 @@ namespace API.Controllers
             return BadRequest(result.Errors);
         }
  
+        [AllowAnonymous]
+        [HttpGet("test")]
+        public ActionResult<string> Test()
+        {
+            _logger.LogInformation("Test endpoint called successfully");
+            return Ok("API is working correctly");
+        }
+
+        [AllowAnonymous]
+        [HttpGet("health")]
+        public async Task<ActionResult<string>> HealthCheck()
+        {
+            try
+            {
+                var userCount = await _userManager.Users.CountAsync();
+                _logger.LogInformation("Database connection successful. User count: {UserCount}", userCount);
+                return Ok($"Database OK. Users: {userCount}");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Database connection failed");
+                return StatusCode(500, $"Database error: {ex.Message}");
+            }
+        }
+
         [Authorize]
         [HttpGet]
         public async Task<ActionResult<UserDto>>GetCurrentUser(){

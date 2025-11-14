@@ -15,6 +15,11 @@ namespace API.Services
             }
         public string CreateToken(AppUser user)
         {
+            var tokenKey = _config["TokenKey"];
+            if (string.IsNullOrEmpty(tokenKey))
+            {
+                throw new InvalidOperationException("TokenKey is not configured in application settings");
+            }
             
            var claims = new List<Claim>
            {
@@ -22,7 +27,7 @@ namespace API.Services
             new Claim(ClaimTypes.NameIdentifier ,user.Id),
             new Claim (ClaimTypes.Email, user.Email),
            };
-           var key= new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["TokenKey"]));
+           var key= new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenKey));
            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
            var tokenDescriptor = new SecurityTokenDescriptor
            {

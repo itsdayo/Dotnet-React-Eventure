@@ -23,8 +23,12 @@ builder.Services.AddControllers(opt =>
 builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddIdentityServices(builder.Configuration);
 
-
 var app = builder.Build();
+
+// Log startup information
+var logger = app.Services.GetRequiredService<ILogger<Program>>();
+logger.LogInformation("Application starting up...");
+logger.LogInformation("Environment: {Environment}", app.Environment.EnvironmentName);
 
 // Configure the HTTP request pipeline.
 
@@ -61,13 +65,12 @@ app.UseCors("CorsPolicy");
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.MapControllers();
+app.MapHub<ChatHub>("/chat");
+
 app.UseDefaultFiles();
 app.UseStaticFiles();
 app.MapFallbackToController("Index", "Fallback");
-
-app.MapControllers();
-
-app.MapHub<ChatHub>("/chat");
 
 using var scope = app.Services.CreateScope();
 var services = scope.ServiceProvider;
