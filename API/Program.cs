@@ -85,8 +85,8 @@ try
 catch (Exception ex)
 {
     
-    var logger = services.GetRequiredService<ILogger<Program>>();
-    logger.LogError(ex, "An error occured during migration");
+    var migrationLogger = services.GetRequiredService<ILogger<Program>>();
+    migrationLogger.LogError(ex, "An error occured during migration");
 }
 
 app.Run();
