@@ -38,7 +38,7 @@ export default observer(function RegisterForm() {
         >
           <Header
             as="h2"
-            content="Sign up to Reactivities"
+            content="Sign up to Eventure"
             color="teal"
             textAlign="center"
           />

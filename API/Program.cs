@@ -45,14 +45,14 @@ app.UseCsp(opt=>opt
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    // app.UseSwagger();
+    // app.UseSwaggerUI();
 }
 else
 {
 app.Use(async (context,next)=>
 {
-    context.Response.Headers.Add("Strict-Transport-Security","max-age=31536000");
+    context.Response.Headers["Strict-Transport-Security"] = "max-age=31536000";
     await next.Invoke();
 });
 }

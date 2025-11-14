@@ -19,7 +19,7 @@ export default observer(function LoginForm() {
         <Form className="ui form" onSubmit={handleSubmit} autoComplete="off">
           <Header
             as="h2"
-            content="Login to Reactivities"
+            content="Login to Eventure"
             color="teal"
             textAlign="center"
           />

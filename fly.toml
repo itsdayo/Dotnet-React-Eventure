@@ -3,13 +3,15 @@
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = "reactivities-planner"
+app = "dotnet-react-eventure"
 primary_region = "lax"
 
 [env]
   ASPNETCORE_URLS="http://+:8080"
   Cloudinary__CloudName="doeosqsqu"
   Cloudinary__ApiKey="829112739361451"
+  TokenKey="super secret key"
+  DATABASE_URL="postgresql://reactivities-planner-db.flycast"
 
 [build]
   image = "dayosql/reactivities:latest"

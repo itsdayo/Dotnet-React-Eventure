@@ -18,7 +18,7 @@ namespace API.Extensions
         {
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             services.AddEndpointsApiExplorer();
-            services.AddSwaggerGen();
+            // services.AddSwaggerGen();
             services.AddDbContext<DataContext>(options =>
 {
     var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
