@@ -15,8 +15,12 @@ COPY Persistence/Persistence.csproj Persistence/
 COPY Domain/Domain.csproj Domain/
 COPY Infrastructure/Infrastructure.csproj Infrastructure/
 
-# Restore dependencies using the solution file
-RUN dotnet restore Eventure.sln
+# Restore dependencies for each project individually
+RUN dotnet restore API/API.csproj
+RUN dotnet restore Application/Application.csproj
+RUN dotnet restore Persistence/Persistence.csproj
+RUN dotnet restore Domain/Domain.csproj
+RUN dotnet restore Infrastructure/Infrastructure.csproj
 
 # Copy the rest of the source code
 COPY . .
