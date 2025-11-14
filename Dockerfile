@@ -1,28 +1,37 @@
+# Stage 1: Build
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-env
 WORKDIR /app
+
+# Expose port
 EXPOSE 8080
 
+# Copy solution file first
+COPY Eventure.sln .
 
-# copy .csproj and restore as distinct layers
-COPY "Eventure.sln" "Eventure.sln"
-COPY "API/API.csproj" "API/API.csproj"
-COPY "Application/Application.csproj" "Application/Application.csproj"
-COPY "Persistence/Persistence.csproj" "Persistence/Persistence.csproj"
-COPY "Domain/Domain.csproj" "Domain/Domain.csproj"
-COPY "Infrastructure/Infrastructure.csproj" "Infrastructure/Infrastructure.csproj"
+# Copy all project files (ensure paths match .sln exactly!)
+COPY API/API.csproj API/
+COPY Application/Application.csproj Application/
+COPY Persistence/Persistence.csproj Persistence/
+COPY Domain/Domain.csproj Domain/
+COPY Infrastructure/Infrastructure.csproj Infrastructure/
 
-RUN dotnet restore "Eventure.sln"
+# Restore dependencies using the solution file
+RUN dotnet restore Eventure.sln
 
-# copy everything else build
+# Copy the rest of the source code
 COPY . .
-WORKDIR /app
-RUN dotnet publish -c Release -o out
 
-#build a runtine image
-FROM mcr.microsoft.com/dotnet/aspnet:8.0
+# Build and publish
+RUN dotnet publish -c Release -o out --no-restore
+
+# Stage 2: Runtime
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
 COPY --from=build-env /app/out .
-# Set environment variables for fly.io
-ENV ASPNETCORE_ENVIRONMENT="Production"
-ENV ASPNETCORE_URLS="http://+:8080"
-ENTRYPOINT [ "dotnet", "API.dll" ]
+
+# Environment variables
+ENV ASPNETCORE_ENVIRONMENT=Production
+ENV ASPNETCORE_URLS=http://+:8080
+
+# Entry point
+ENTRYPOINT ["dotnet", "API.dll"]

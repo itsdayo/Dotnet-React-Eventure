@@ -10,7 +10,7 @@ primary_region = "lax"
   ASPNETCORE_URLS="http://+:8080"
   Cloudinary__CloudName="doeosqsqu"
   Cloudinary__ApiKey="829112739361451"
-  TokenKey="super secret key"
+  TokenKey="super secret key that is at least 64 characters long for hmac sha512 algorithm to work properly"
   DATABASE_URL="postgresql://reactivities-planner-db.flycast"
 
 [build]
