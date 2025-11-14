@@ -8,6 +8,7 @@ using Infrastructure.Photos;
 using Infrastructure.Security;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 using Persistence;
 
 namespace API.Extensions
@@ -45,47 +46,29 @@ namespace API.Extensions
 
         try
         {
-            connUrl = connUrl.Replace("postgres://", string.Empty);
+            Console.WriteLine($"Original DATABASE_URL: {connUrl}");
             
-            var parts = connUrl.Split("@");
-            if (parts.Length != 2)
+            // Temporarily hardcoded connection string for testing
+            connStr = "Server=reactivities-planner-db.internal;Port=5432;User Id=reactivities_planner;Password=MAmH8xWlllvA8kk;Database=reactivities_planner;SslMode=Disable;";
+            Console.WriteLine($"Using hardcoded connection string: {connStr}");
+            
+            // TODO: Fix URL parsing later
+            /*
+            // Use Npgsql's built-in URL parsing
+            var builder = new NpgsqlConnectionStringBuilder(connUrl);
+            
+            // Replace flycast with internal for the host
+            if (builder.Host.Contains("flycast"))
             {
-                throw new FormatException("Invalid DATABASE_URL format. Expected format: postgres://user:password@host:port/database");
+                builder.Host = builder.Host.Replace("flycast", "internal");
             }
             
-            var pgUserPass = parts[0];
-            var pgHostPortDb = parts[1];
+            // Ensure SSL is disabled
+            builder.SslMode = SslMode.Disable;
             
-            var userPassParts = pgUserPass.Split(":");
-            if (userPassParts.Length != 2)
-            {
-                throw new FormatException("Invalid user:password format in DATABASE_URL");
-            }
-            
-            var hostPortDbParts = pgHostPortDb.Split("/");
-            if (hostPortDbParts.Length != 2)
-            {
-                throw new FormatException("Invalid host:port/database format in DATABASE_URL");
-            }
-            
-            var pgUser = userPassParts[0];
-            var pgPass = userPassParts[1];
-            
-            var pgHostPort = hostPortDbParts[0];
-            var pgDb = hostPortDbParts[1];
-            
-            var hostPortParts = pgHostPort.Split(":");
-            if (hostPortParts.Length != 2)
-            {
-                throw new FormatException("Invalid host:port format in DATABASE_URL");
-            }
-            
-            var pgHost = hostPortParts[0];
-            var pgPort = hostPortParts[1];
-            
-            var updatedHost = pgHost.Replace("flycast", "internal");
-
-            connStr = $"Server={updatedHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb};";
+            connStr = builder.ToString();
+            Console.WriteLine($"Final connection string: {connStr}");
+            */
         }
         catch (Exception ex)
         {

@@ -13,6 +13,9 @@ primary_region = "lax"
   TokenKey="super secret key that is at least 64 characters long for hmac sha512 algorithm to work properly"
   DATABASE_URL="postgres://reactivities_planner:MAmH8xWlllvA8kk@reactivities-planner-db.flycast:5432/reactivities_planner?sslmode=disable"
 
+[build]
+  dockerfile = "Dockerfile"
+
 [http_service]
   internal_port = 8080
   force_https = true
