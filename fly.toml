@@ -8,10 +8,8 @@ primary_region = "lax"
 
 [env]
   ASPNETCORE_URLS="http://+:8080"
-  Cloudinary__CloudName="doeosqsqu"
-  Cloudinary__ApiKey="829112739361451"
   TokenKey="super secret key that is at least 64 characters long for hmac sha512 algorithm to work properly"
-  DATABASE_URL="postgres://reactivities_planner:MAmH8xWlllvA8kk@reactivities-planner-db.flycast:5432/reactivities_planner?sslmode=disable"
+  DATABASE_URL="${DATABASE_URL}"
 
 [build]
   dockerfile = "Dockerfile"
