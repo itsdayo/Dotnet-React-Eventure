@@ -33,10 +33,11 @@ namespace API.Controllers
         {
             try
             {
-                _logger.LogInformation("Login attempt for email: {Email}", loginDto.Email);
+                var email = loginDto.Email.ToLowerInvariant();
+                _logger.LogInformation("Login attempt for email: {Email}", email);
                 
                 var user = await _userManager.Users.Include(p=>p.Photos)
-                .FirstOrDefaultAsync(x=>x.Email==loginDto.Email);
+                .FirstOrDefaultAsync(x=>x.Email == email);
                 
                 if(user == null) 
                 {
@@ -67,7 +68,9 @@ namespace API.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
         {
-             if (await _userManager.Users.AnyAsync(x => x.Email == registerDto.Email)){
+             var email = registerDto.Email.ToLowerInvariant();
+
+             if (await _userManager.Users.AnyAsync(x => x.Email == email)){
                 
                 ModelState.AddModelError("email", "Email Already Taken");
                 return ValidationProblem();
@@ -81,7 +84,7 @@ namespace API.Controllers
             var user = new AppUser
             {
                 DisplayName = registerDto.DisplayName,
-                Email = registerDto.Email,
+                Email = email,
                 UserName = registerDto.Username
             };
             var result = await _userManager.CreateAsync(user, registerDto.Password);
