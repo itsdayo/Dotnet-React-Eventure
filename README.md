@@ -89,9 +89,9 @@ The server will automatically:
 ### Optional: Running the Application with Docker
 
 ```bash
-docker build -t dayosql/reactivities .
+docker build -t incogniyo/reactivities .
 
-docker run --rm -it -p 8080:8080 dayosql/reactivities
+docker run --rm -it -p 8080:8080 incogniyo/reactivities
 ```
 
 ## Project Structure
