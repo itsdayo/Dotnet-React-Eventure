@@ -98,7 +98,12 @@ services.AddCors(opt =>
             services.AddHttpContextAccessor();
             services.AddScoped<IUserAccessor, UserAccessor>();
             services.AddScoped<IPhotoAccessor, PhotoAccessor>();
-            services.Configure<CloudinarySettings>(config.GetSection("Cloudinary"));
+            services.Configure<CloudinarySettings>(cloudinarySettings =>
+            {
+                cloudinarySettings.CloudName = Environment.GetEnvironmentVariable("CLOUDINARY_CLOUD_NAME") ?? config["Cloudinary:CloudName"];
+                cloudinarySettings.ApiKey = Environment.GetEnvironmentVariable("CLOUDINARY_API_KEY") ?? config["Cloudinary:ApiKey"];
+                cloudinarySettings.ApiSecret = Environment.GetEnvironmentVariable("CLOUDINARY_API_SECRET") ?? config["Cloudinary:ApiSecret"];
+            });
             services.AddSignalR();
 
             return services;
