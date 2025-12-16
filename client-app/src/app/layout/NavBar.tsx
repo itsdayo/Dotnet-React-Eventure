@@ -1,4 +1,4 @@
-import { Button, Container, Dropdown, Image, Menu } from "semantic-ui-react";
+import { Button, Dropdown, Image, Menu } from "semantic-ui-react";
 import { Link, NavLink } from "react-router-dom";
 import { useStore } from "../stores/store";
 import { observer } from "mobx-react-lite";
@@ -8,23 +8,63 @@ export default observer(function NavBar() {
     userStore: { user, logout },
   } = useStore();
   return (
-    <Menu inverted fixed="top">
-      <Container>
-        <Menu.Item as={NavLink} to="/" header>
-          <img src="/assets/logo.png" alt="logo" style={{ marginRight: 10 }} />
-           Eventure
-        </Menu.Item>
-        <Menu.Item as={NavLink} to="/activities" name="Activities" />
-        <Menu.Item as={NavLink} to="/errors" name="Errors" />
-        <Menu.Item>
-          <Button
+    <Menu inverted fixed="top" style={{ zIndex: 1000 }}>
+      <div
+        style={{
+          display: "flex",
+          width: "100%",
+          alignItems: "center",
+          margin: "0",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            flexGrow: 1,
+            overflowX: "scroll",
+            overflowY: "hidden",
+            WebkitOverflowScrolling: "touch", // Enable smooth iOS scrolling
+            minWidth: 0, // Required for flex-grow to work properly
+            scrollbarWidth: "none" /* Firefox */,
+            msOverflowStyle: "none" /* IE and Edge */,
+          }}
+        >
+          <Menu.Item
             as={NavLink}
-            to="/createActivity"
-            positive
-            content="Create Activity"
-          />
-        </Menu.Item>
-        <Menu.Item position="right">
+            to="/"
+            header
+            style={{
+              flexShrink: 0,
+              paddingLeft: 0,
+
+              border: "none",
+            }}
+          >
+            <img
+              src="/assets/logo.png"
+              alt="logo"
+              style={{ marginRight: 10 }}
+            />
+            Eventure
+          </Menu.Item>
+          <div style={{ display: "flex", minWidth: "300px" }}>
+            <Menu.Item
+              as={NavLink}
+              to="/activities"
+              name="Activities"
+              style={{ flexShrink: 0 }}
+            />
+            <Menu.Item style={{ flexShrink: 0, marginRight: 15 }}>
+              <Button
+                as={NavLink}
+                to="/createActivity"
+                positive
+                content="Create Activity"
+              />
+            </Menu.Item>
+          </div>
+        </div>
+        <Menu.Item position="right" style={{ flexShrink: 0, paddingRight: 3 }}>
           <Image
             src={user?.image || "/assets/user.png"}
             avatar
@@ -42,7 +82,7 @@ export default observer(function NavBar() {
             </Dropdown.Menu>
           </Dropdown>
         </Menu.Item>
-      </Container>
+      </div>
     </Menu>
   );
 });

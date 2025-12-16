@@ -28,6 +28,7 @@ export default observer(function LoginForm() {
             placeholder="Password"
             name="password"
             type="password"
+            showPasswordToggle={true}
           />
           <ErrorMessage
             name="error"

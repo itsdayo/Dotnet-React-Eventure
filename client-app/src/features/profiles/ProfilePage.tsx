@@ -25,8 +25,8 @@ export default observer(function ProfilePage() {
     return <LoadingComponent content="Loading Profile ...." />;
 
   return (
-    <Grid>
-      <Grid.Column width={16}>
+    <Grid style={{ margin: 0, padding: 0 }}>
+      <Grid.Column width={16} style={{ padding: "0 1em" }}>
         {profile && (
           <>
             <ProfileHeader profile={profile} />

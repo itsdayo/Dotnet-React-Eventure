@@ -34,6 +34,11 @@ function App() {
         <HomePage />
       ) : (
         <>
+          {/* The NavBar is fixed="top" and should span the viewport width.
+            Removed the wrapping Container with minWidth: "1200vw" and overflowX: "scroll"
+            as this was creating excessive horizontal scrolling for the entire page 
+            and conflicting with the fixed navbar's layout.
+          */}
           <NavBar />
           <Container style={{ marginTop: "7em" }}>
             <Outlet />

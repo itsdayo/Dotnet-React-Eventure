@@ -49,6 +49,7 @@ export default observer(function RegisterForm() {
             placeholder="Password"
             name="password"
             type="password"
+            showPasswordToggle={true}
           />
           <ErrorMessage
             name="error"

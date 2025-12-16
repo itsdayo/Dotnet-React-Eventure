@@ -11,11 +11,28 @@ body {
   ) !important;
 }
 
-.react-calendar {
+.responsive-calendar-container {
+  max-width: 100%; /* Ensure the container doesn't exceed the parent's width */
+  padding: 10px; /* Optional: Add some padding to prevent it from touching the edges */
+}
+
+/*
+  This targets the root element created by react-calendar itself.
+  It overrides the component's internal sizing.
+*/
+.responsive-calendar-container .react-calendar {
+  width: 100% !important; /* Force the calendar to fill the container width */
+  max-width: 100% !important; /* Ensure it respects the container's limit */
+  border: 1px solid #a0a096; /* Example: Default styling is often applied here */
+  border-radius: 8px; /* Example: Added styling */
+  box-shadow: 0 1px 2px 0 rgba(34, 36, 38, 0.15);
+}
+
+/* .react-calendar {
   width: "100%";
   border: none;
   box-shadow: 0 1px 2px 0 rgba(34, 36, 38, 0.15);
-}
+} */
 
 .react-datepicker-wrapper {
   width: 100%;
@@ -50,4 +67,28 @@ body {
   font-weight: normal;
 }
 
+@media (max-width: 600px) {
+  .responsive-calendar-container {
+    width: 90vw; /* Make calendar container wider on mobile */
+    margin: 0 auto; /* Center it */
+  }
+
+  .responsive-calendar-container .react-calendar {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 280px; /* Ensure minimum width for usability */
+    font-size: 14px; /* Increase font size for better readability */
+  }
+
+  .responsive-calendar-container .react-calendar button {
+    padding: 8px 4px; /* Increase button padding for easier tapping */
+    font-size: 13px;
+  }
+
+  .responsive-calendar-container
+    .react-calendar
+    .react-calendar__month-view__days__day {
+    min-height: 40px; /* Make day cells larger for easier tapping */
+  }
+}
 /*end home page styles*/
