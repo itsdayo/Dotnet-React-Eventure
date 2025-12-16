@@ -27,13 +27,28 @@ export default observer(function ActivityDetails() {
   if (loadingInitial || !activity) return;
 
   return (
-    <Grid>
-      <Grid.Column width={10}>
+    <Grid stackable style={{ padding: "1em" }}>
+      <Grid.Column
+        width={10}
+        mobile={16}
+        tablet={10}
+        style={{
+          paddingRight: window.innerWidth > 768 ? "1em" : "0",
+          marginBottom: window.innerWidth > 768 ? "0" : "1em",
+        }}
+      >
         <ActivityDetailedHeader activity={activity} />
         <ActivityDetailedInfo activity={activity} />
         <ActivityDetailedChat activityId={activity.id} />
       </Grid.Column>
-      <Grid.Column width={6}>
+      <Grid.Column
+        width={6}
+        mobile={16}
+        tablet={6}
+        style={{
+          paddingLeft: window.innerWidth > 768 ? "1em" : "0",
+        }}
+      >
         <ActivityDetailedSidebar activity={activity} />
       </Grid.Column>
     </Grid>
